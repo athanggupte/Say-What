@@ -1,0 +1,2 @@
+minigrid @ git+https://github.com/Farama-Foundation/Minigrid.git@master
+
