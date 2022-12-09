@@ -1,7 +1,10 @@
 numpy
 tqdm
+array2gif
 minigrid @ git+https://github.com/Farama-Foundation/Minigrid.git@master
 matplotlib
 torch
+torch-ac>=1.4.0
 transformers[torch]
+tensorboardx>=1.6
 --extra-index-url https://download.pytorch.org/whl/cu117
