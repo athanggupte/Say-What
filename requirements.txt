@@ -7,4 +7,5 @@ torch
 torch-ac>=1.4.0
 transformers[torch]
 tensorboardx>=1.6
+wandb
 --extra-index-url https://download.pytorch.org/whl/cu117
