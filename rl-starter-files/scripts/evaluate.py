@@ -99,11 +99,13 @@ if __name__ == "__main__":
     duration = int(end_time - start_time)
     return_per_episode = utils.synthesize(logs["return_per_episode"])
     num_frames_per_episode = utils.synthesize(logs["num_frames_per_episode"])
+    success_rate = utils.synthesize([r > 0.0 for r in logs["return_per_episode"]])["mean"]
 
-    print("F {} | FPS {:.0f} | D {} | R:μσmM {:.2f} {:.2f} {:.2f} {:.2f} | F:μσmM {:.1f} {:.1f} {} {}"
+    print("F {} | FPS {:.0f} | D {} | R:μσmM {:.2f} {:.2f} {:.2f} {:.2f} | F:μσmM {:.1f} {:.1f} {} {} | S: {:.2f}"
           .format(num_frames, fps, duration,
                   *return_per_episode.values(),
-                  *num_frames_per_episode.values()))
+                  *num_frames_per_episode.values(),
+                  success_rate))
 
     # Print worst episodes
 

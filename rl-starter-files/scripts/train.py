@@ -3,6 +3,7 @@ import time
 import datetime
 import torch_ac
 import tensorboardX
+import wandb
 import sys
 
 import utils
@@ -80,6 +81,12 @@ if __name__ == "__main__":
     txt_logger = utils.get_txt_logger(model_dir)
     csv_file, csv_logger = utils.get_csv_logger(model_dir)
     tb_writer = tensorboardX.SummaryWriter(model_dir)
+
+    wandb_config = { k: getattr(args, k) for k in vars(args) }.update(dict(architecture=model_name))
+    wandb.init(
+        project="csci499-saywhat",
+        config=wandb_config,
+    )
 
     # Log command and all script arguments
 
@@ -192,6 +199,8 @@ if __name__ == "__main__":
 
             for field, value in zip(header, data):
                 tb_writer.add_scalar(field, value, num_frames)
+                wandb.log({field: value}, step=num_frames, commit=False)
+            wandb.log({}, step=num_frames, commit=True)
 
         # Save status
 
@@ -202,3 +211,7 @@ if __name__ == "__main__":
                 status["vocab"] = preprocess_obss.vocab.vocab
             utils.save_status(status, model_dir)
             txt_logger.info("Status saved")
+            
+            art = wandb.Artifact("status.pt", type="model")
+            art.add_file(utils.get_status_path(model_dir))
+            wandb.log_artifact(art)

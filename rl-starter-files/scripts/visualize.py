@@ -84,6 +84,8 @@ for episode in range(args.episodes):
         obs, reward, terminated, truncated, _ = env.step(action)
         done = terminated | truncated
         agent.analyze_feedback(reward, done)
+
+        print(reward)
         
         if args.log_actions:
             actions.append(action.item())
