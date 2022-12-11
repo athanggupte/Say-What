@@ -85,12 +85,12 @@ for episode in range(args.episodes):
         done = terminated | truncated
         agent.analyze_feedback(reward, done)
 
-        print(reward)
         
         if args.log_actions:
             actions.append(action.item())
 
         if done or env.window.closed:
+            print(reward)
             break
 
     if env.window.closed:
