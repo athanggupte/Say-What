@@ -6,6 +6,9 @@ from torch_ac.utils.penv import ParallelEnv
 import utils
 from utils import device
 
+from minigrid_saywhat import *
+from model_saywhat import SayWhat_ACModel
+
 
 # Parse arguments
 
@@ -53,13 +56,14 @@ if __name__ == "__main__":
 
     # Load agent
 
-    qmodel_dir = utils.get_model_dir(args.qmodel)
-    agent_q = utils.Agent(env.observation_space, env.action_space, qmodel_dir,
-                        argmax=args.argmax, num_envs=args.procs)
     amodel_dir = utils.get_model_dir(args.amodel)
     agent_a = utils.Agent(env.observation_space, env.action_space, amodel_dir,
                         argmax=args.argmax, num_envs=args.procs,
                         use_memory=args.memory, use_text=args.text)
+    qmodel_dir = utils.get_model_dir(args.qmodel)
+    agent_q = utils.SayWhat_Agent(env.observation_space, env.action_space, qmodel_dir, agent_a.acmodel,
+                        argmax=args.argmax, num_envs=args.procs)
+
     print("Agent loaded\n")
 
     # Initialize logs
