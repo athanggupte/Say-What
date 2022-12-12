@@ -129,6 +129,11 @@ class ACModel(nn.Module, torch_ac.RecurrentACModel):
         return self.image_embedding_size
 
     def forward(self, obs, memory, instr_embedding=None):
+        embedding, memory = self._forward_without_heads(obs, memory, instr_embedding)
+        dist, value = self._forward_through_heads(embedding)
+        return dist, value, memory
+
+    def _forward_without_heads(self, obs, memory, instr_embedding=None):
         if self.use_text and instr_embedding is None:
             instr_embedding = self._get_embed_text(obs.text)
 
@@ -148,17 +153,17 @@ class ACModel(nn.Module, torch_ac.RecurrentACModel):
         else:
             embedding = x
 
-        # if self.use_text:
-        #     embed_text = self._get_embed_text(obs.text)
-        #     embedding = torch.cat((embedding, embed_text), dim=1)
+        return embedding, memory
 
+    def _forward_through_heads(self, embedding):
         x = self.actor(embedding)
         dist = Categorical(logits=F.log_softmax(x, dim=1))
 
         x = self.critic(embedding)
         value = x.squeeze(1)
 
-        return dist, value, memory
+        return dist, value
+
 
     def _get_embed_text(self, text):
         _, hidden = self.text_rnn(self.word_embedding(text))

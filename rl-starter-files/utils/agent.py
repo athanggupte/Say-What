@@ -28,7 +28,7 @@ class Agent:
         if hasattr(self.preprocess_obss, "vocab"):
             self.preprocess_obss.vocab.load_vocab(utils.get_vocab(model_dir))
 
-    def get_actions(self, obss):
+    def get_actions(self, obss, return_numpy=True):
         preprocessed_obss = self.preprocess_obss(obss, device=device)
 
         with torch.no_grad():
@@ -42,7 +42,10 @@ class Agent:
         else:
             actions = dist.sample()
 
-        return actions.cpu().numpy()
+        if return_numpy:
+            return actions.cpu().numpy()
+        else:
+            return actions
 
     def get_action(self, obs):
         return self.get_actions([obs])[0]
