@@ -10,6 +10,8 @@ import utils
 from utils import device
 from model import ACModel
 
+from minigrid_saywhat import *
+
 
 # Parse arguments
 
